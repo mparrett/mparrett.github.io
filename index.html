@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matt Parrett — Software Engineer</title>
+  <meta name="description" content="Matt Parrett — software engineer building systems at scale, working on tough problems with machine intelligence.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-bg: #F2F0EC;
+      --color-text: #1A1A1A;
+      --color-muted: #696969;
+      --color-faint: #888;
+      --color-border: #E8E6E2;
+      --color-border-strong: #1A1A1A;
+      --color-card-bg: #ECEAE6;
+      --color-link-underline: #D8D6D2;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --font-family: 'Instrument Sans', system-ui, sans-serif;
+      --line-height: 1.6;
+      --border-radius: 6px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #1a1b1e;
+        --color-text: #e8e6e3;
+        --color-muted: #aaa;
+        --color-faint: #8e8e8e;
+        --color-border: #333;
+        --color-border-strong: #e8e6e3;
+        --color-card-bg: #252528;
+        --color-link-underline: #555;
+      }
+    }
+
+    html {
+      font-family: var(--font-family);
+      font-size: 1rem;
+      font-kerning: normal;
+      line-height: var(--line-height);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    :focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+    a:focus-visible { border-radius: 2px; }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 0 32px; }
+
+    p { margin: 0 0 var(--spacing-md) 0; }
+
+    a {
+      color: var(--color-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--color-link-underline);
+    }
+    a:hover { color: var(--color-text); border-bottom-color: var(--color-text); }
+
+    /* Nav */
+    nav {
+      padding: 36px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 2px solid var(--color-border-strong);
+      margin-bottom: 64px;
+    }
+    .nav-name {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      border-bottom: none;
+    }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links li { margin: 0; }
+    .nav-links a {
+      font-size: 12px;
+      padding: 8px 4px;
+      display: inline-block;
+      color: var(--color-muted);
+      border-bottom: 1px solid transparent;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .nav-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-text); }
+
+    /* Hero / about */
+    .hero-title {
+      font-size: 42px;
+      font-weight: 300;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: var(--color-text);
+      margin-bottom: 20px;
+    }
+    .lede { font-size: 17px; color: var(--color-text); margin-bottom: 16px; }
+    .about { font-size: 15px; line-height: 1.7; color: var(--color-muted); }
+    .about a { color: var(--color-text); border-bottom-color: var(--color-link-underline); }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: 16px;
+    }
+
+    /* Project / writing grid */
+    .section { margin-top: 56px; }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .proj-card {
+      display: block;
+      background: var(--color-card-bg);
+      border-radius: var(--border-radius);
+      padding: 18px 20px;
+      text-decoration: none;
+      color: inherit;
+      border-bottom: none;
+    }
+    .proj-card h3.proj-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text);
+      margin: 0 0 4px;
+      letter-spacing: -0.01em;
+    }
+    .proj-desc { font-size: 12px; color: var(--color-muted); line-height: 1.5; margin-bottom: 12px; }
+    .proj-link {
+      font-size: 12px;
+      color: var(--color-muted);
+      letter-spacing: 0.03em;
+      border-bottom: none;
+      padding: 8px 0 0;
+      display: inline-block;
+    }
+    .proj-link::after { content: " →"; }
+    .proj-card:hover .proj-link { color: var(--color-text); }
+
+    /* Footer */
+    footer {
+      margin-top: 72px;
+      border-top: 1px solid var(--color-border);
+      padding: 16px 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: 12px; color: var(--color-faint); }
+    .footer-links { display: flex; gap: 20px; list-style: none; margin: 0; }
+    .footer-links li { margin: 0; }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--color-muted);
+      border-bottom: 1px solid transparent;
+      padding: 8px 4px;
+      display: inline-block;
+    }
+    .footer-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-text); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .wrap { padding: 0 20px; }
+      nav { padding-top: 10px; margin-bottom: 48px; }
+      .hero-title { font-size: 32px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <nav aria-label="Main navigation">
+        <a class="nav-name" href="/">Matt Parrett</a>
+        <ul class="nav-links">
+          <li><a href="https://github.com/mparrett">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/mattparrett">LinkedIn</a></li>
+          <li><a href="/assets/pdf/Matt_Parrett_SSWE_Resume_2022_Nov.pdf">Résumé</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+
+      <h1 class="hero-title">Matt Parrett</h1>
+      <p class="lede">Software engineer. I build systems at scale.</p>
+      <p class="about">
+        I like working on hard problems and making the world a little better with
+        machine intelligence. If you've got something tough to build, let's
+        <a href="mailto:matt.parrett@gmail.com">work together</a>.
+      </p>
+
+      <!-- Edit these cards with real projects/writing; links are placeholders for now. -->
+      <section class="section">
+        <h2 class="section-label">Selected work</h2>
+        <div class="projects-grid">
+          <a class="proj-card" href="https://github.com/mparrett">
+            <h3 class="proj-name">Project name</h3>
+            <div class="proj-desc">A one-line description of what it is and why it matters. Replace with something real.</div>
+            <span class="proj-link">View</span>
+          </a>
+          <a class="proj-card" href="https://github.com/mparrett">
+            <h3 class="proj-name">Project name</h3>
+            <div class="proj-desc">A one-line description of what it is and why it matters. Replace with something real.</div>
+            <span class="proj-link">View</span>
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer aria-label="Site footer">
+      <ul class="footer-links">
+        <li><a href="https://github.com/mparrett">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/mattparrett">LinkedIn</a></li>
+        <li><a href="https://twitter.com/mattparrett">Twitter</a></li>
+      </ul>
+      <span class="footer-copy">© 2026 Matt Parrett</span>
+    </footer>
+
+  </div><!-- /.wrap -->
+</body>
+</html>

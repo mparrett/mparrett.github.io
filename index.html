@@ -9,42 +9,50 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --color-bg: #F2F0EC;
-      --color-text: #1A1A1A;
-      --color-muted: #696969;
-      --color-faint: #888;
-      --color-border: #E8E6E2;
-      --color-border-strong: #1A1A1A;
-      --color-card-bg: #ECEAE6;
-      --color-link-underline: #D8D6D2;
-      --spacing-sm: 0.5rem;
+      --color-bg: #F3F1EB;
+      --color-text: #191917;
+      --color-muted: #5E5E58;
+      --color-faint: #8C8C84;
+      --color-border: #E3E0D7;
+      --color-border-strong: #191917;
+      --color-card-bg: #ECE9E1;
+      --color-card-bg-hover: #E7E3D9;
+      --color-link-underline: #D2CFC5;
+      /* deep teal — the one accent; used in the signature motif and link/hover only */
+      --color-accent: #1F6E6A;
+      --color-accent-faint: rgba(31, 110, 106, 0.16);
       --spacing-md: 1rem;
-      --font-family: 'Instrument Sans', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'Instrument Sans', system-ui, sans-serif;
+      --font-mono: 'Spline Sans Mono', ui-monospace, 'SFMono-Regular', monospace;
       --line-height: 1.6;
-      --border-radius: 6px;
+      --border-radius: 8px;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --color-bg: #1a1b1e;
-        --color-text: #e8e6e3;
-        --color-muted: #aaa;
-        --color-faint: #8e8e8e;
-        --color-border: #333;
-        --color-border-strong: #e8e6e3;
-        --color-card-bg: #252528;
-        --color-link-underline: #555;
+        --color-bg: #131418;
+        --color-text: #E9E7E1;
+        --color-muted: #A6A39B;
+        --color-faint: #807D75;
+        --color-border: #2A2C31;
+        --color-border-strong: #E9E7E1;
+        --color-card-bg: #1C1E23;
+        --color-card-bg-hover: #22242A;
+        --color-link-underline: #45474D;
+        --color-accent: #5FD3C9;
+        --color-accent-faint: rgba(95, 211, 201, 0.18);
       }
     }
 
     html {
-      font-family: var(--font-family);
+      font-family: var(--font-body);
       font-size: 1rem;
       font-kerning: normal;
       line-height: var(--line-height);
@@ -54,10 +62,11 @@
       color: var(--color-text);
     }
 
-    :focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+    ::selection { background: var(--color-accent-faint); }
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
     a:focus-visible { border-radius: 2px; }
 
-    .wrap { max-width: 680px; margin: 0 auto; padding: 0 32px; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 32px; }
 
     p { margin: 0 0 var(--spacing-md) 0; }
 
@@ -66,118 +75,223 @@
       text-decoration: none;
       border-bottom: 1px solid var(--color-link-underline);
     }
-    a:hover { color: var(--color-text); border-bottom-color: var(--color-text); }
+    a:hover { color: var(--color-text); border-bottom-color: var(--color-accent); }
 
     /* Nav */
     nav {
-      padding: 36px 0 0;
+      padding: 36px 0 14px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
       flex-wrap: wrap;
-      gap: 8px;
-      border-bottom: 2px solid var(--color-border-strong);
-      margin-bottom: 64px;
+      gap: 8px 20px;
+      border-bottom: 1.5px solid var(--color-border-strong);
+      margin-bottom: 72px;
     }
     .nav-name {
-      font-size: 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
       font-weight: 500;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
       color: var(--color-text);
       border-bottom: none;
     }
-    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-name::before { content: "// "; color: var(--color-accent); }
+    .nav-links { display: flex; gap: 22px; list-style: none; }
     .nav-links li { margin: 0; }
     .nav-links a {
-      font-size: 12px;
-      padding: 8px 4px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 6px 2px;
       display: inline-block;
       color: var(--color-muted);
       border-bottom: 1px solid transparent;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-    .nav-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-text); }
+    .nav-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-accent); }
 
-    /* Hero / about */
-    .hero-title {
-      font-size: 42px;
-      font-weight: 300;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      color: var(--color-text);
-      margin-bottom: 20px;
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
     }
-    .lede { font-size: 17px; color: var(--color-text); margin-bottom: 16px; }
-    .about { font-size: 15px; line-height: 1.7; color: var(--color-muted); }
-    .about a { color: var(--color-text); border-bottom-color: var(--color-link-underline); }
-
-    .section-label {
+    .hero-eyebrow {
+      font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-faint);
-      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+      color: var(--color-accent);
+      margin-bottom: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    /* Project / writing grid */
-    .section { margin-top: 56px; }
-    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .proj-card {
-      display: block;
-      background: var(--color-card-bg);
-      border-radius: var(--border-radius);
-      padding: 18px 20px;
-      text-decoration: none;
-      color: inherit;
-      border-bottom: none;
-    }
-    .proj-card h3.proj-name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text);
-      margin: 0 0 4px;
-      letter-spacing: -0.01em;
-    }
-    .proj-desc { font-size: 12px; color: var(--color-muted); line-height: 1.5; margin-bottom: 12px; }
-    .proj-link {
-      font-size: 12px;
-      color: var(--color-muted);
-      letter-spacing: 0.03em;
-      border-bottom: none;
-      padding: 8px 0 0;
+    .hero-eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--color-accent);
       display: inline-block;
     }
-    .proj-link::after { content: " →"; }
-    .proj-card:hover .proj-link { color: var(--color-text); }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+      color: var(--color-text);
+      margin-bottom: 22px;
+    }
+    .lede {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      margin-bottom: 16px;
+    }
+    .about { font-size: 15.5px; line-height: 1.7; color: var(--color-muted); max-width: 46ch; }
+    .about a { color: var(--color-text); border-bottom-color: var(--color-accent); }
+    .about a:hover { color: var(--color-accent); }
+
+    /* Signature: a fine-line sphere lattice — a nod to the spherical-grid work */
+    .sigil { flex-shrink: 0; }
+    .sigil svg { display: block; width: 150px; height: 150px; }
+    .sigil .lat, .sigil .lon, .sigil .rim {
+      fill: none;
+      stroke: var(--color-accent);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+    .sigil .rim { stroke-opacity: 0.85; }
+    .sigil .lat { stroke-opacity: 0.38; }
+    .sigil .lon { stroke-opacity: 0.5; }
+    .sigil .node { fill: var(--color-accent); }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .sigil path, .sigil circle.rim { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 1.4s ease forwards; }
+      .sigil .lon { animation-delay: 0.15s; }
+      .sigil .node { opacity: 0; animation: pop 0.5s ease forwards 1.2s; }
+      @keyframes draw { to { stroke-dashoffset: 0; } }
+      @keyframes pop { to { opacity: 1; } }
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* Project grid */
+    .section { margin-top: 64px; }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .proj-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 20px 22px;
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+    }
+    .proj-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--color-accent);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.24s ease;
+    }
+    .proj-card:hover {
+      background: var(--color-card-bg-hover);
+      transform: translateY(-3px);
+      border-color: var(--color-accent-faint);
+    }
+    .proj-card:hover::before { transform: scaleY(1); }
+    .proj-card h3.proj-name {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-text);
+      margin: 0 0 6px;
+      letter-spacing: -0.015em;
+    }
+    .proj-desc { font-size: 13px; color: var(--color-muted); line-height: 1.55; margin: 0 0 16px; flex: 1; }
+    .proj-link {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--color-faint);
+      letter-spacing: 0.03em;
+      border-bottom: none;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
+    .proj-link::after { content: " →"; transition: transform 0.2s ease; display: inline-block; }
+    .proj-card:hover .proj-link { color: var(--color-accent); }
+    .proj-card:hover .proj-link::after { transform: translateX(3px); }
+
+    /* parked cards read as intentional, not broken — static, no link affordance */
+    .proj-card.placeholder { background: transparent; border-style: dashed; }
+    .proj-card.placeholder:hover { background: transparent; transform: none; border-color: var(--color-border); }
+    .proj-card.placeholder::before { display: none; }
+    .proj-card.placeholder .proj-name { color: var(--color-faint); }
+    .proj-card.placeholder .proj-link { color: var(--color-faint); }
+    .proj-card.placeholder .proj-link::after { content: ""; }
 
     /* Footer */
     footer {
-      margin-top: 72px;
+      margin-top: 80px;
       border-top: 1px solid var(--color-border);
-      padding: 16px 0 32px;
+      padding: 18px 0 36px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .footer-copy { font-size: 12px; color: var(--color-faint); }
+    .footer-copy { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-faint); }
     .footer-links { display: flex; gap: 20px; list-style: none; margin: 0; }
     .footer-links li { margin: 0; }
     .footer-links a {
-      font-size: 12px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
       color: var(--color-muted);
       border-bottom: 1px solid transparent;
-      padding: 8px 4px;
+      padding: 6px 2px;
       display: inline-block;
+      letter-spacing: 0.03em;
     }
-    .footer-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-text); }
+    .footer-links a:hover { color: var(--color-text); border-bottom: 1px solid var(--color-accent); }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .wrap { padding: 0 20px; }
-      nav { padding-top: 10px; margin-bottom: 48px; }
-      .hero-title { font-size: 32px; }
+      .wrap { padding: 0 22px; }
+      nav { padding-top: 16px; margin-bottom: 52px; }
+      .hero { grid-template-columns: 1fr; gap: 28px; }
+      .sigil { order: -1; }
+      .sigil svg { width: 116px; height: 116px; }
+      .hero-title { font-size: 40px; }
       .projects-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; align-items: flex-start; gap: 16px; }
     }
@@ -199,28 +313,64 @@
 
     <main id="main-content">
 
-      <h1 class="hero-title">Matt Parrett</h1>
-      <p class="lede">Software engineer. I build systems at scale.</p>
-      <p class="about">
-        I like working on hard problems and making the world a little better with
-        machine intelligence. If you've got something tough to build, let's
-        <a href="mailto:matt.parrett@gmail.com">work together</a>.
-      </p>
+      <section class="hero">
+        <div class="hero-text">
+          <span class="hero-eyebrow">Software Engineer</span>
+          <h1 class="hero-title">Matt Parrett</h1>
+          <p class="lede">I build systems at scale.</p>
+          <p class="about">
+            I like working on hard problems and making the world a little better with
+            machine intelligence. If you've got something tough to build, let's
+            <a href="mailto:matt.parrett@gmail.com">work together</a>.
+          </p>
+        </div>
 
-      <!-- Edit these cards with real projects/writing; links are placeholders for now. -->
+        <!-- Signature: spherical-grid lattice, drawn once on load -->
+        <div class="sigil" aria-hidden="true">
+          <svg viewBox="0 0 100 100" role="presentation">
+            <circle class="rim" cx="50" cy="50" r="40"/>
+            <path class="lat" d="M10,50 A40,12 0 0 0 90,50"/>
+            <path class="lat" d="M14,33 A36,9 0 0 0 86,33"/>
+            <path class="lat" d="M14,67 A36,9 0 0 1 86,67"/>
+            <path class="lon" d="M50,10 A12,40 0 0 0 50,90"/>
+            <path class="lon" d="M50,10 A30,40 0 0 0 50,90"/>
+            <path class="lon" d="M50,10 A30,40 0 0 1 50,90"/>
+            <circle class="node" cx="50" cy="10" r="2.1"/>
+            <circle class="node" cx="50" cy="90" r="2.1"/>
+            <circle class="node" cx="90" cy="50" r="1.6"/>
+            <circle class="node" cx="10" cy="50" r="1.6"/>
+          </svg>
+        </div>
+      </section>
+
       <section class="section">
-        <h2 class="section-label">Selected work</h2>
+        <h2 class="section-label">A few things I'm building</h2>
         <div class="projects-grid">
-          <a class="proj-card" href="https://github.com/mparrett">
-            <h3 class="proj-name">Project name</h3>
-            <div class="proj-desc">A one-line description of what it is and why it matters. Replace with something real.</div>
-            <span class="proj-link">View</span>
+          <a class="proj-card" href="https://kaiju.aitoybox.me">
+            <h3 class="proj-name">Kaiju Elements</h3>
+            <div class="proj-desc">A procedural planet and creature simulation — geometry, terrain, and life on a sphere.</div>
+            <span class="proj-link">Explore</span>
           </a>
-          <a class="proj-card" href="https://github.com/mparrett">
-            <h3 class="proj-name">Project name</h3>
-            <div class="proj-desc">A one-line description of what it is and why it matters. Replace with something real.</div>
-            <span class="proj-link">View</span>
+          <a class="proj-card" href="https://dejavueapp.com">
+            <h3 class="proj-name">DejaVue</h3>
+            <div class="proj-desc">Privacy-first iOS app that resurfaces forgotten photos, entirely on-device.</div>
+            <span class="proj-link">Visit</span>
           </a>
+          <a class="proj-card" href="https://kilter-embeddings.mattmp.com/">
+            <h3 class="proj-name">Kilter Embeddings</h3>
+            <div class="proj-desc">Learning the geometry of climbing — embeddings over Kilter Board problems.</div>
+            <span class="proj-link">Explore</span>
+          </a>
+          <a class="proj-card" href="https://github.com/mparrett/birdsong">
+            <h3 class="proj-name">Birdsong</h3>
+            <div class="proj-desc">An acoustic modem — sending bytes over sound with a tiny, pipe-friendly FSK implementation.</div>
+            <span class="proj-link">Source</span>
+          </a>
+          <div class="proj-card placeholder">
+            <h3 class="proj-name">Genealogy</h3>
+            <div class="proj-desc">Family history — tracing the record back through the generations.</div>
+            <span class="proj-link">Coming soon</span>
+          </div>
         </div>
       </section>
 
@@ -230,7 +380,6 @@
       <ul class="footer-links">
         <li><a href="https://github.com/mparrett">GitHub</a></li>
         <li><a href="https://www.linkedin.com/in/mattparrett">LinkedIn</a></li>
-        <li><a href="https://twitter.com/mattparrett">Twitter</a></li>
       </ul>
       <span class="footer-copy">© 2026 Matt Parrett</span>
     </footer>

@@ -439,8 +439,10 @@
     const orbit = a => [Math.cos(a), Math.sin(a) * Math.sin(INC), Math.sin(a) * Math.cos(INC)];
 
     let tiltX = -18 * D, tiltY = 0, aimX = tiltX, aimY = 0;
+    const AX = 23.4 * D, cax = Math.cos(AX), sax = Math.sin(AX);
     const view = ([x, y, z]) => {
-      // yaw (pointer) then pitch (tilt + pointer)
+      // axial tilt (Earth's 23.4°, leaning right), then yaw (pointer), then pitch (tilt + pointer)
+      [x, y] = [x * cax + y * sax, -x * sax + y * cax];
       const cy = Math.cos(tiltY), sy = Math.sin(tiltY);
       [x, z] = [x * cy + z * sy, -x * sy + z * cy];
       const cx = Math.cos(tiltX), sx = Math.sin(tiltX);

@@ -177,6 +177,13 @@
       .sigil .node { opacity: 0; animation: pop 0.5s ease forwards 1.2s; }
       @keyframes draw { to { stroke-dashoffset: 0; } }
       @keyframes pop { to { opacity: 1; } }
+
+      /* Live globe (built by the script below): far-side lines stay faint so depth reads */
+      .sigil.live svg { animation: settle 1.6s cubic-bezier(.2,.7,.2,1) both; }
+      .sigil.live path, .sigil.live circle { stroke-dasharray: none; animation: none; opacity: 1; }
+      .sigil.live .back { stroke-opacity: 0.12; }
+      .sigil.live .trail { fill: none; stroke: var(--color-accent); stroke-width: 1.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+      @keyframes settle { from { opacity: 0; transform: scale(.94) rotate(-8deg); } }
     }
 
     .section-label {
@@ -390,5 +397,107 @@
     </footer>
 
   </div><!-- /.wrap -->
+
+  <script>
+  // Live globe: re-projects the lattice each frame so it actually turns in 3D.
+  // Reduced-motion users (and no-JS) keep the static draw-once SVG above.
+  (() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const host = document.querySelector('.sigil');
+    const svg = host && host.querySelector('svg');
+    if (!svg) return;
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const D = Math.PI / 180, R = 40, C = 50, STEPS = 72;
+    const mk = (tag, cls, attrs = {}) => {
+      const el = document.createElementNS(NS, tag);
+      el.setAttribute('class', cls);
+      for (const k in attrs) el.setAttribute(k, attrs[k]);
+      svg.appendChild(el);
+      return el;
+    };
+
+    svg.replaceChildren();
+    mk('circle', 'rim', { cx: C, cy: C, r: R });
+    // Each curve is a function θ -> unit-sphere point; drawn as front + back paths.
+    const curves = [];
+    for (const lat of [-60, -30, 0, 30, 60]) {
+      const cl = Math.cos(lat * D), sl = Math.sin(lat * D);
+      curves.push({ cls: 'lat', f: (t, s) => [cl * Math.sin(t + s), sl, cl * Math.cos(t + s)] });
+    }
+    for (let k = 0; k < 6; k++) {
+      const L = k * 30 * D;
+      curves.push({ cls: 'lon', f: (t, s) => [Math.cos(t) * Math.sin(L + s), Math.sin(t), Math.cos(t) * Math.cos(L + s)] });
+    }
+    for (const c of curves) { c.back = mk('path', c.cls + ' back'); c.front = mk('path', c.cls); }
+    const poles = [mk('circle', 'node', { r: 2.1 }), mk('circle', 'node', { r: 2.1 })];
+    // One satellite on an inclined orbit, with a short trail of fading segments.
+    const TRAIL = 10;
+    const trail = Array.from({ length: TRAIL }, (_, i) => mk('path', 'trail', { 'stroke-opacity': ((TRAIL - i) / TRAIL * 0.7).toFixed(2) }));
+    const sat = mk('circle', 'node', { r: 1.8 });
+    const INC = 52 * D;
+    const orbit = a => [Math.cos(a), Math.sin(a) * Math.sin(INC), Math.sin(a) * Math.cos(INC)];
+
+    let tiltX = -18 * D, tiltY = 0, aimX = tiltX, aimY = 0;
+    const view = ([x, y, z]) => {
+      // yaw (pointer) then pitch (tilt + pointer)
+      const cy = Math.cos(tiltY), sy = Math.sin(tiltY);
+      [x, z] = [x * cy + z * sy, -x * sy + z * cy];
+      const cx = Math.cos(tiltX), sx = Math.sin(tiltX);
+      [y, z] = [y * cx - z * sx, y * sx + z * cx];
+      return [C + R * x, C - R * y, z];
+    };
+    const fmt = n => n.toFixed(2);
+
+    function frame(now) {
+      const spin = now * 0.00011; // ~57s per turn
+      tiltX += (aimX - tiltX) * 0.04;
+      tiltY += (aimY - tiltY) * 0.04;
+      for (const c of curves) {
+        let fd = '', bd = '', prev = null;
+        for (let i = 0; i <= STEPS; i++) {
+          const [px, py, pz] = view(c.f(i / STEPS * 2 * Math.PI, spin));
+          const front = pz >= 0, seg = `${fmt(px)},${fmt(py)}`;
+          const cont = prev === front;
+          if (front) fd += (cont ? 'L' : 'M') + seg; else bd += (cont ? 'L' : 'M') + seg;
+          prev = front;
+        }
+        c.front.setAttribute('d', fd);
+        c.back.setAttribute('d', bd);
+      }
+      [[0, 1, 0], [0, -1, 0]].forEach((p, i) => {
+        const [x, y, z] = view(p);
+        poles[i].setAttribute('cx', fmt(x)); poles[i].setAttribute('cy', fmt(y));
+        poles[i].style.opacity = z >= 0 ? 1 : 0.25;
+      });
+      const a = now * 0.00045;
+      for (let i = 0; i < TRAIL; i++) {
+        const [x1, y1, z1] = view(orbit(a - i * 0.045));
+        const [x2, y2] = view(orbit(a - (i + 1) * 0.045));
+        trail[i].setAttribute('d', `M${fmt(x1)},${fmt(y1)}L${fmt(x2)},${fmt(y2)}`);
+        trail[i].style.opacity = z1 >= 0 ? 1 : 0.2;
+      }
+      const [sx, sy, sz] = view(orbit(a));
+      sat.setAttribute('cx', fmt(sx)); sat.setAttribute('cy', fmt(sy));
+      sat.style.opacity = sz >= 0 ? 1 : 0.25;
+      if (running) raf = requestAnimationFrame(frame);
+    }
+
+    // Pointer leans the globe a few degrees toward the cursor.
+    addEventListener('pointermove', e => {
+      aimY = (e.clientX / innerWidth - 0.5) * 16 * D;
+      aimX = -18 * D + (e.clientY / innerHeight - 0.5) * -10 * D;
+    }, { passive: true });
+
+    // Only animate while visible on screen.
+    let running = false, raf = 0;
+    const start = () => { if (!running) { running = true; raf = requestAnimationFrame(frame); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    new IntersectionObserver(([e]) => (e.isIntersecting && !document.hidden ? start() : stop())).observe(host);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    host.classList.add('live');
+    frame(performance.now());
+  })();
+  </script>
 </body>
 </html>
